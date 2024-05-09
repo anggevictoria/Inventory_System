@@ -1,22 +1,35 @@
 <?php
-// Check if the form is submitted
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Check if both username and password are provided
-    if (isset($_POST["username"]) && isset($_POST["password"])) {
-        $username = $_POST["username"];
-        $password = $_POST["password"];
-        
-        // You can perform authentication here, for example, checking against a database
-        // Sample code for authentication:
-        // if ($username === "admin" && $password === "admin123") {
-        //     // Authentication successful, redirect to a dashboard or home page
-        //     header("Location: dashboard.php");
-        //     exit;
-        // } else {
-        //     // Authentication failed, display an error message
-        //     $error_message = "Invalid username or password";
-        // }
-    }
+// initializing variables
+$username = "";
+$errors = array(); 
+
+// connect to the database (where database is, username, password, name of dB)
+
+
+// LOGIN USER
+if (isset($_POST['login_user'])) {
+  $username = mysqli_real_escape_string($db, $_POST['username']);
+  $password = mysqli_real_escape_string($db, $_POST['password']);
+
+  if (empty($username)) {
+  	array_push($errors, "Username is required");
+  }
+  if (empty($password)) {
+  	array_push($errors, "Password is required");
+  }
+
+  if (count($errors) == 0) { //if user doesn't have errors
+  	$password = md5($password);
+  	$query = "SELECT * FROM users WHERE username='$username' AND password='$password'"; //check database if password corresponds with username
+  	$results = mysqli_query($db, $query);
+  	if (mysqli_num_rows($results) == 1) {
+  	  $_SESSION['username'] = $username;
+  	  $_SESSION['success'] = "You are now logged in";
+  	  header('location: index.php'); //if it corresponds, user is transferred to index.php
+  	} else {
+  		array_push($errors, "Wrong username/password combination");
+  	}
+  }
 }
 ?>
 
@@ -45,12 +58,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <label><input type="checkbox" name="remember">Remember Me</label>
         <a href="#">Forgot Password</a>
       </div>
-      <button type="submit" class="btn" name="login">Login</button>
+      <button type="submit" class="btn" name="login_user">Login</button>
       <div class="register-link">
         <p>Don't have an account? <a href="#">Register</a></p>
       </div>
-      <?php if(isset($error_message)) { ?>
-        <div class="error-message"><?php echo $error_message; ?></div>
+      <?php if(isset($errors) && count($errors) > 0) { ?>
+        <div class="error-message">
+            <?php foreach ($errors as $error) { ?>
+                <p><?php echo $error; ?></p>
+            <?php } ?>
+        </div>
       <?php } ?>
     </form>
   </div>
