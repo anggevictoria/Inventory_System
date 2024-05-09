@@ -4,7 +4,7 @@ $username = "";
 $errors = array(); 
 
 // connect to the database (where database is, username, password, name of dB)
-
+$db = mysqli_connect('localhost', 'root', '', 'userdb');
 
 // LOGIN USER
 if (isset($_POST['login_user'])) {
