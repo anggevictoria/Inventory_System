@@ -1,9 +1,12 @@
 <?php
+// Start the session
+session_start();
+
 // initializing variables
 $username = "";
 $errors = array(); 
 
-// connect to the database (where database is, username, password, name of dB)
+// connect to the database
 $db = mysqli_connect('localhost', 'root', '', 'userdb');
 
 // LOGIN USER
@@ -12,26 +15,28 @@ if (isset($_POST['login_user'])) {
   $password = mysqli_real_escape_string($db, $_POST['password']);
 
   if (empty($username)) {
-  	array_push($errors, "Username is required");
+    array_push($errors, "Username is required");
   }
   if (empty($password)) {
-  	array_push($errors, "Password is required");
+    array_push($errors, "Password is required");
   }
 
   if (count($errors) == 0) { //if user doesn't have errors
-  	$password = md5($password);
-  	$query = "SELECT * FROM users WHERE username='$username' AND password='$password'"; //check database if password corresponds with username
-  	$results = mysqli_query($db, $query);
-  	if (mysqli_num_rows($results) == 1) {
-  	  $_SESSION['username'] = $username;
-  	  $_SESSION['success'] = "You are now logged in";
-  	  header('location: index.php'); //if it corresponds, user is transferred to index.php
-  	} else {
-  		array_push($errors, "Wrong username/password combination");
-  	}
+    $password = md5($password);
+    $query = "SELECT * FROM users WHERE username='$username' AND password='$password'"; //check database if password corresponds with username
+    $results = mysqli_query($db, $query);
+    if (mysqli_num_rows($results) == 1) {
+      $_SESSION['username'] = $username;
+      $_SESSION['success'] = "You are now logged in";
+      header('location: index.php'); //if it corresponds, user is transferred to index.php
+      exit(); // Make sure to exit after the redirect
+    } else {
+      array_push($errors, "Wrong username/password combination");
+    }
   }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
