@@ -94,6 +94,9 @@ if (isset($_POST['login_user'])) {
     <title>Login Page</title>
     <link rel="stylesheet" href="styles.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+
+    <!-- CSS STYLE -->
      
     <style>
       /* General styles */
@@ -214,6 +217,8 @@ h3 {
 }
 
       </style>
+
+<!-- CSS END STYLE -->
 
 </head>
 <body>
