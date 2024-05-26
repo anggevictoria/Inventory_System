@@ -1,72 +1,3 @@
-<?php
-session_start();
-
-// Redirect to index.php if user is already logged in
-if (isset($_SESSION['user_id'])) {
-  header('location: index.php');
-  exit();
-}
-
-// initializing variables
-$user_id = "";
-$errors = array(); 
-
-// connect to the database
-$db = mysqli_connect('localhost', 'root', '', 'login');
-
-// Check connection
-if (mysqli_connect_errno()) {
-  echo "Failed to connect to MySQL: " . mysqli_connect_error();
-  exit();
-}
-
-// Auto-create table if it doesn't exist
-$sql = "CREATE TABLE IF NOT EXISTS users (
-  id INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  user_id INT(10) NOT NULL,
-  name VARCHAR(30) NOT NULL,
-  password VARCHAR(255) NOT NULL
-)";
-mysqli_query($db, $sql);
-
-// REGISTER USER
-if (isset($_POST['register_user'])) {
-  $user_id = mysqli_real_escape_string($db, $_POST['user_id']);
-  $name = mysqli_real_escape_string($db, $_POST['name']);
-  $password_1 = mysqli_real_escape_string($db, $_POST['password_1']);
-  $password_2 = mysqli_real_escape_string($db, $_POST['password_2']);
-
-  // form validation
-  if (empty($user_id)) {
-    array_push($errors, "User ID is required");
-  }
-  if (empty($name)) { // Check for empty name
-    array_push($errors, "Name is required");
-  }
-  if (empty($password_1)) {
-    array_push($errors, "Password is required");
-  }
-  if ($password_1 != $password_2) {
-    array_push($errors, "The two passwords do not match");
-  }
-
-  // register user if there are no errors in the form
-  if (count($errors) == 0) {
-    // **Use a secure hashing algorithm instead of md5!**
-    $password_1 = password_hash($password_1, PASSWORD_BCRYPT); // Example using bcrypt
-
-    $query = "INSERT INTO users (user_id, name, password) VALUES('$user_id', '$name', '$password_1')";
-    mysqli_query($db, $query);
-
-    $_SESSION['user_id'] = $user_id;
-    $_SESSION['name'] = $name;  // Store name in session
-    $_SESSION['success'] = "You are now registered and logged in";
-    header('location: index.php');
-  }
-}
-?>
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -76,119 +7,155 @@ if (isset($_POST['register_user'])) {
     <link rel="stylesheet" href="styles.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <style>
-    /* General styles */
-body {
-  font-family: sans-serif;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background-color: #f0f0f0;
-}
+        /* General styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url('../image/UB-BACKGROUND.jpg'); /* Replace 'path_to_your_image.jpg' with the actual path to your image */
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
 
-/* Wrapper styles */
-.wrapper {
-  background-color: #fff;
-  padding: 30px;
-  border-radius: 5px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-  width: 400px;
-}
+        /* Navbar styles */
+        header {
+            background-color: #ffffff;
+            color: #fff;
+            padding: 10px 0;
+            position: fixed; /* Fixed positioning */
+            top: 0; /* Place the navbar at the top */
+            width: 100%; /* Make the navbar span the entire width */
+            z-index: 999; /* Ensure the navbar stays above other content */
+        }
 
-/* Form styles */
-form {
-  display: flex;
-  flex-direction: column;
-}
+        .navbar {
+            display: flex;
+            justify-content: flex-start; /* Align items to the start */
+            align-items: center;
+            padding-left: 20px;
+        }
 
-h3 {
-  text-align: center;
-  margin-bottom: 20px;
-}
+        .navbar img {
+            height: 50px; /* Adjust the height as needed */
+            margin-right: 15px;
+        }
 
-.input-box {
-  margin-bottom: 15px;
-  position: relative;
-}
+        /* Wrapper styles */
+        .wrapper {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            margin-top: 80px; /* Adjust margin-top to center vertically */
+        }
 
-.input-box input {
-  width: 95%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 3px;
-  font-size: 16px;
-}
+        /* Form styles */
+        form {
+            display: flex;
+            flex-direction: column;
+        }
 
-.input-box i {
-  position: absolute;
-  top: 50%;
-  right: 10px;
-  transform: translateY(-50%);
-  color: #ccc;
-  font-size: 18px;
-}
+        h3 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
 
-.input-box input:focus + i,
-.input-box input:valid + i {
-  color: #999;
-}
+        .input-box {
+            margin-bottom: 15px;
+            position: relative;
+        }
 
-/* Role selection styles */
-.role {
-  margin-bottom: 15px;
-  display: flex;
-  align-items: center;
-}
+        .input-box input {
+            width: 95%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            font-size: 16px;
+        }
 
-.role label {
-  margin-right: 10px;
-}
+        .input-box i {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            color: #ccc;
+            font-size: 18px;
+        }
 
-/* Button styles */
-.btn {
-  background-color: #671111;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 3px;
-  cursor: pointer;
-  font-size: 16px;
-  margin-top: 15px;
-}
+        .input-box input:focus + i,
+        .input-box input:valid + i {
+            color: #999;
+        }
 
-.btn:hover {
-  background-color: #671111;
-}
+        /* Role selection styles */
+        .role {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
 
-/* Login link styles */
-.login-link {
-  text-align: center;
-  margin-top: 15px;
-}
+        .role label {
+            margin-right: 10px;
+        }
 
-.login-link a {
-  color: #671111;
-  text-decoration: none;
-}
+        /* Button styles */
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 12px 0;
+            background-color: #6b1500;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s, transform 0.2s;
+            text-align: center;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
 
-/* Error message styles */
-.error-message {
-  background-color: #f0ad4e;
-  color: #fff;
-  padding: 10px;
-  border-radius: 3px;
-  margin-top: 15px;
-}
 
-.error-message p {
-  margin-bottom: 5px;
-}
-</style>
+        /* Login link styles */
+        .login-link {
+            text-align: center;
+            margin-top: 15px;
+        }
 
+        .login-link a {
+            color: #671111;
+            text-decoration: none;
+        }
+
+        /* Error message styles */
+        .error-message {
+            background-color: #f0ad4e;
+            color: #fff;
+            padding: 10px;
+            border-radius: 3px;
+            margin-top: 15px;
+        }
+
+        .error-message p {
+            margin-bottom: 5px;
+        }
+    </style>
 </head>
 <body>
+<header>
+    <nav class="navbar">
+        <img src="../image/UB-Master-Logo.jpg" alt="University of Batangas Logo">
+        <!-- You can add more navbar elements here if needed -->
+    </nav>
+</header>
+
 <div class="wrapper">
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
         <h3>Admin Registration</h3>
