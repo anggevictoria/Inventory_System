@@ -146,14 +146,8 @@ if (isset($_GET['logout'])) {
                 </ul>
             </li>
           <li><a class="nav-link" href="borrowedItems_list.php">Borrowed Items</a></li>
-          <li><a class="nav-link" href="notifications.php">Notifications</a></li>
           <li><a class="nav-link" href="../login/login.php">Log Out</a></li>
-        <li class="search-bar">
-            <form action="" method="post">
-              <input type="text" name="search" placeholder="Search">
-              <button type="submit">Search</button>
-            </form>
-          </li>
+       
         </ul>
         
         <i class="bi bi-list mobile-nav-toggle"></i>
