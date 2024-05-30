@@ -1,11 +1,3 @@
-/**
-* Template Name: Regna
-* Template URL: https://bootstrapmade.com/regna-bootstrap-onepage-template/
-* Updated: Mar 17 2024 with Bootstrap v5.3.3
-* Author: BootstrapMade.com
-* License: https://bootstrapmade.com/license/
-*/
-
 (function() {
   "use strict";
 
@@ -232,67 +224,4 @@
    */
   new PureCounter();
 
-  function showError(message) {
-    // Create an alert element
-    var alertElement = document.createElement("div");
-    alertElement.classList.add("alert"); // Add a CSS class for styling (optional)
-    alertElement.innerText = message;
-
-    // Append the alert to the body
-    document.body.appendChild(alertElement);
-
-    // Optionally, remove the alert after a few seconds
-    setTimeout(function() {
-        alertElement.remove();
-    }, 3000); // Remove after 3 seconds
-  }
-
-
-  function showError(message) {
-    // Create an alert element
-    var alertElement = document.createElement("div");
-    alertElement.classList.add("alert"); // Add a CSS class for styling (optional)
-    alertElement.innerText = message;
-
-    // Append the alert to the body
-    document.body.appendChild(alertElement);
-
-    // Optionally, remove the alert after a few seconds
-    setTimeout(function() {
-        alertElement.remove();
-    }, 3000); // Remove after 3 seconds
-  }
-
-  const errorMessage = `<?php echo isset($errorMessage) ? $errorMessage : ''; ?>`;
-  const hasData = <?php echo isset($hasData) ? json_encode($hasData) : 'false'; ?>;
-
-    if (errorMessage) {
-      showError(errorMessage); // Call the error notification function
-    } else if (!hasData) {
-      // Optionally handle the case of no data retrieved
-      showError('No data retrieved from the database.');
-    }
-  
-    function showError(message) {
-      // Create an alert element (or use an alternative notification library)
-      var alertElement = document.createElement("div");
-      alertElement.classList.add("alert", "alert-danger"); // Add CSS classes for styling
-
-      // Display the error message
-      alertElement.innerText = message;
-
-      // Optionally, append the alert to a specific location (e.g., dedicated container)
-      const notificationContainer = document.getElementById('notification-container'); // Replace with your container ID
-      if (notificationContainer) {
-        notificationContainer.appendChild(alertElement);
-      } else {
-        document.body.appendChild(alertElement); // Fallback to body append
-      }
-
-      // Optionally, remove the alert after a few seconds
-      setTimeout(function() {
-          alertElement.remove();
-      }, 3000);
-    }
-
-})()
+})();

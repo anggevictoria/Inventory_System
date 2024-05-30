@@ -81,7 +81,7 @@ if (isset($_GET['logout'])) {
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Welcome to UBLC Engineering Tool Room</title>
+  <title>UBLC Engineering Tool Room</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -233,7 +233,7 @@ if (isset($_GET['logout'])) {
               <div class="social">
                 <a href="https://twitter.com/home"><i class="bi bi-twitter"></i></a>
                 <a href="https://www.facebook.com/profile.php?id=100027424326007"><i class="bi bi-facebook"></i></a>
-                <a href="https://www.instagram.com/immartortiz?fbclid=IwZXh0bgNhZW0CMTAAAR1P6D8PYGcRKwgxb0TjXDtqDV1o5DTISJc6oqknV0fZAjhxzY6s-fL22Nc_aem_AdXEj6AXxhJWp-6d9ZH4jqxJ5lx27J4cHisCevx3NT9E8NFAZA9n3oZlbZVG0qd3CDeWp7_fZ_Jh7yyWspFSGBmp"><i class="bi bi-instagram"></i></a>
+                <a href="https://www.instagram.com/immartortiz"><i class="bi bi-instagram"></i></a>
                 <a href="https://www.linkedin.com"><i class="bi bi-linkedin"></i></a>
               </div>
             </div>

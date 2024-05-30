@@ -82,7 +82,7 @@ if (isset($_GET['logout'])) {
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Welcome to UBLC Engineering Tool Room</title>
+  <title>UBLC Engineering Tool Room</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -138,8 +138,6 @@ if (isset($_GET['logout'])) {
 
       <div id="logo">
         <a href="homepage_student.php"><img src="admin/assets/img/UB-Master-Logo.png" alt="" style="width: 220px; height: -250px;"></a>
-        <!-- Uncomment below if you prefer to use a text logo -->
-        <!--<h1><a href="index.html">Regna</a></h1>-->
       </div>
 
       <nav id="navbar" class="navbar">
@@ -262,16 +260,12 @@ if (isset($_GET['logout'])) {
         &copy; Copyright <strong>UBLC ENGINEERING TOOLROOM</strong>. All Rights Reserved
       </div>
       <div class="credits">
-        <!--
-        All the links in the footer should remain intact.
-        You can delete the links only if you purchased the pro version.
-        Licensing information: https://bootstrapmade.com/license/
-        Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/buy/?theme=Regna
-      -->
+        
         Designed by <a href="https://bootstrapmade.com/">Team 11 CpE3A</a>
       </div>
     </div>
-  </footer><!-- End Footer -->
+  </footer>
+  <!-- End Footer -->
 
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
