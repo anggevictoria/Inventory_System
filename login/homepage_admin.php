@@ -150,15 +150,8 @@ if (isset($_GET['logout'])) {
                 <li><a href="admin_add_tool_maintenance.php">Tool Maintenance</a></li>
                 </ul>
             </li>
-          <li><a class="nav-link" href="admin_borrowers.php">Borrowers</a></li>
-          <li><a class="nav-link" href="admin_notifications.php">Notifications</a></li>
           <li><a class="nav-link" href="../login/login.php">Log Out</a></li>
-        <li class="search-bar">
-            <form action="" method="post">
-              <input type="text" name="search" placeholder="Search">
-              <button type="submit">Search</button>
-            </form>
-          </li>
+
         </ul>
         
         <i class="bi bi-list mobile-nav-toggle"></i>
