@@ -29,6 +29,7 @@
     password VARCHAR(255) NOT NULL,
     role VARCHAR(255) NOT NULL
   )";
+  
   mysqli_query($db, $sql);
 
   // LOGIN USER
