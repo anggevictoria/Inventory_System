@@ -191,7 +191,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <header>
         <nav>
             <a href="homepage_student.php">Home</a>
-            <a href="#">Borowed Tools</a>
+            <a href="borrowedItems_list.php">Borrowed Tools</a>
         </nav>
     
 

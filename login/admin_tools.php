@@ -206,7 +206,6 @@ mysqli_close($db); // Close the connection
 
 <body>
   <header>
-    <img src="admin/assets/img/IS Logo.png" alt="IS Logo" class="header-image">
     <h1>Tool Records</h1>
   </header>
 
