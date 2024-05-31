@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url("assets/img/background.jpg"); /* Placeholder background image */
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <nav class="navbar">
+        <img src="assets/img/logo.png" alt="University of Batangas Logo" class="logo">
+    </nav>
+</header>
+
+<div class="wrapper">
+    <form action="pages/login.php" method="post">
+        <h3>Login</h3>
+        <div class="input-box">
+            <input type="text" name="user_id" placeholder="User ID" required>
+            <i class='bx bxs-user'></i>
+        </div>
+        <div class="input-box">
+            <input type="password" name="password" placeholder="Password" required>
+            <i class='bx bxs-lock-alt'></i>
+        </div>
+        <div class="remember-forgot">
+            <label><input type="checkbox" name="remember">Remember Me</label>
+            <a href="#">Forgot Password</a>
+        </div>
+        <button type="submit" class="btn" name="login_user">Login</button>
+        <div class="register-link">
+            <p>Don't have an account? <a href="pages/register.php">Register</a></p>
+        </div>
+    </form>
+</div>
+
+<!-- Modal Structure -->
+<div id="errorModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h3>Error</h3>
+        <p id="errorMessage"></p>
+    </div>
+</div>
+
+<script>
+// Get the modal
+var modal = document.getElementById("errorModal");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+    modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+
+// Function to display modal with error message
+function showError(message) {
+    document.getElementById("errorMessage").innerText = message;
+    modal.style.display = "block";
+}
+
+</script>
+
+</body>
+</html>
