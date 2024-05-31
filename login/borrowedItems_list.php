@@ -1,145 +1,249 @@
 <?php
-// Include connection details
-include "admin_connect1.php";
+session_start();
 
-$sql = "CREATE TABLE IF NOT EXISTS borrowed_items (
-  student_id INT(11),
-  FOREIGN KEY (student_id) REFERENCES users(id),
-  id_tool INT NOT NULL,
-  FOREIGN KEY (id_tool) REFERENCES tools(id),
-  quan INT NOT NULL,
-  FOREIGN KEY (quan) REFERENCES tools(quantity),
-  borrowed_date DATE NOT NULL,
-  returned_date DATE NOT NULL,
-  returned_time TIME NOT NULL
-)";
+// Database connection details
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "borrowers";
 
-if (!mysqli_query($db, $sql)) {
-  die("Error creating table: " . mysqli_error($db));
+// Create connection
+$db = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
+if ($db->connect_error) {
+    die("Connection failed: " . $db->connect_error);
 }
 
-// Retrieve existing records (optional)
-$sql = "SELECT * FROM borrowed_items";
-$result = mysqli_query($db, $sql);
+// Check if the form is submitted
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Get form data
+    $studentId = $_POST['student_id'];
+    $toolId = $_POST['id_tool'];
+    $quantity = $_POST['quan'];
+    $borrowedDate = $_POST['borrowed_date'];
+    $returnedDate = $_POST['returned_date']; // Optional, might be empty if not returned yet
+    $returnedTime = $_POST['returned_time']; // Optional, might be empty if not returned yet
+
+    // Basic validation (optional, improve based on your needs)
+    if (!is_numeric($studentId) || !is_numeric($toolId) || !is_numeric($quantity) || !preg_match("/^\d{4}-\d{2}-\d{2}$/", $borrowedDate) || ($returnedDate && !preg_match("/^\d{4}-\d{2}-\d{2}$/", $returnedDate))) {
+        echo "Invalid data submitted.";
+        exit;
+    }
+
+    // Insert statement
+    $sql = "INSERT INTO borrowed_items (student_id, id_tool, quan, borrowed_date, returned_date, returned_time) VALUES (?, ?, ?, ?, ?, ?)";
+    $stmt = $db->prepare($sql);
+
+    if ($stmt) {
+        $stmt->bind_param("iiisss", $studentId, $toolId, $quantity, $borrowedDate, $returnedDate, $returnedTime);
+
+        if ($stmt->execute()) {
+            echo "Successfully borrowed a tool!";
+        } else {
+            echo "Error: " . $stmt->error;
+        }
+
+        $stmt->close();
+    } else {
+        echo "Error: " . $db->error;
+    }
+
+    // Close connection
+    $db->close();
+}
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Borrowed Items</title>
-  
-  <style>
-    /* Basic form styling */
-    form {
-      width: fit-content;
-      margin: 20px auto;
-      padding: 20px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-    }
+    <meta charset="UTF-8">
+    <title>Borrow Tool</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 40px;
+        }
 
-    label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: bold;
-    }
+        h1, h2 {
+            margin-bottom: 10px;
+        }
 
-    input[type="text"],
-    input[type="number"],
-    input[type="date"],
-    input[type="time"] {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 3px;
-      margin-bottom: 15px;
-    }
+        header {
+            background-color: #800000; /* Maroon */
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+            margin-bottom: 20px;
+        }
 
-    button[type="submit"] {
-      background-color: #4CAF50; /* Green */
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
+        header nav a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+        }
 
-    /* Center the table */
-  .table-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-  }
+        header nav a:hover {
+            text-decoration: underline;
+        }
 
-  /* Table Styles */
-  table {
-    border-collapse: collapse;
-    width: 100%;
-    max-width: 800px; /* Adjust the max width as needed */
-  }
+        .table-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
 
-  th, td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-  }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            max-width: 800px; /* Adjust the max width as needed */
+        }
 
-  th {
-    background-color: #f2f2f2;
-  }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
 
-</style>
+        th {
+            background-color: #f2f2f2;
+        }
 
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto; /* 15% from the top and centered */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; /* Could be more or less, depending on screen size */
+            max-width: 500px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        input[type="time"],
+        textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #800000; /* Maroon */
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin-top: 10px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .error {
+            color: red;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .success {
+            color: green;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
-  <h1>Borrowed Items</h1>
+    <header>
+        <nav>
+            <a href="homepage_student.php">Home</a>
+        </nav>
+    </header>
 
-  <?php
-  // Display the table of borrowed items
-  if ($result && mysqli_num_rows($result) > 0) {
-    echo '<div class="table-container">';
-    echo "<table>";
-    echo "<tr><th>Tool ID:</th><th>Quantity:</th><th>Status</th></tr>";
+    <?php if (!empty($success_message)): ?>
+        <div class="success">
+            <?php echo $success_message; ?>
+        </div>
+    <?php endif; ?>
 
-    while ($row = mysqli_fetch_assoc($result)) {
-      $itemId = $row['id_tool']; // Assuming 'id' is the unique identifier for the record
-      $isReturned = $row['returned_date'] != null; // Check if a returned date is set (assuming 'returned_date' indicates a returned item)
+    <?php if (!empty($error_message)): ?>
+        <div class="error">
+            <?php echo $error_message; ?>
+        </div>
+    <?php endif; ?>
 
-      echo "<tr>";
-      echo "<td>" . $row['id_tool'] . "</td>";
-      echo "<td>" . $row['quan'] . "</td>";
-      echo "<td>";
-      if ($isReturned) {
-        echo "Returned";
-      } else {
-        echo '<button id="returnButton_' . $itemId . '" data-item-id="' . $itemId . '">Return</button>';
-      }
-      echo "</td>";
-      echo "</tr>";
+
+
+    <h2>Borrowed Items</h2>
+    <?php
+    // Reconnect to the database to display the borrowed items
+    $db = new mysqli($servername, $username, $password, $dbname);
+
+    // Check connection
+    if ($db->connect_error) {
+        die("Connection failed: " . $db->connect_error);
     }
 
-    echo "</table>";
-    echo '</div>';
-  } else {
-    echo "No records found.";
-  }
-  ?>
+    // Retrieve existing records
+    $sql = "SELECT * FROM borrowed_items";
+    $result = mysqli_query($db, $sql);
 
-  <script>
-    // JavaScript to handle returning items (simulate for demo)
-    const returnButtons = document.querySelectorAll("[id^='returnButton_']"); // Select all buttons with IDs starting with "returnButton_"
-    returnButtons.forEach(button => {
-      button.addEventListener("click", function() {
-        const itemId = this.dataset.itemId;
-        // Simulate updating the item status (replace with your logic)
-        this.textContent = "Returned";
-        this.disabled = true;
-        // Consider sending an AJAX request to update the status on the server-side
-      });
-    });
-  </script>
+    if ($result && mysqli_num_rows($result) > 0) {
+        echo '<div class="table-container">';
+        echo "<table>";
+        echo "<tr><th>Student ID</th><th>Tool ID</th><th>Quantity</th><th>Borrowed Date</th><th>Return Date</th><th>Return Time</th></tr>";
+        while ($row = mysqli_fetch_assoc($result)) {
+            echo "<tr>";
+            echo "<td>" . $row['student_id'] . "</td>";
+            echo "<td>" . $row['id_tool'] . "</td>";
+            echo "<td>" . $row['quan'] . "</td>";
+            echo "<td>" . $row['borrowed_date'] . "</td>";
+            echo "<td>" . $row['returned_date'] . "</td>";
+            echo "<td>" . $row['returned_time'] . "</td>";
+            echo "</tr>";
+        }
+        echo "</table>";
+        echo '</div>';
+    } else {
+        echo "No records found.";
+    }
 
+    // Close connection
+    mysqli_close($db);
+    ?>
 </body>
 </html>
