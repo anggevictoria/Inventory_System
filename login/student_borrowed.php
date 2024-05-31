@@ -125,63 +125,6 @@ if (!mysqli_query($db, $sql)) {
 $sql = "SELECT * FROM borrowed_items";
 $result = mysqli_query($db, $sql);
 
-displayRecords($result);
-
-// Function to display records (optional)
-function displayRecords($result) {
-  if ($result) {
-    echo '<div class="table-container">';
-    echo "<table>";
-    echo "<tr><th>Tool ID:</th><th>Quantity:</th><th>Status</th></tr>";
-
-    while ($row = mysqli_fetch_assoc($result)) {
-      $itemId = $row['id_tool']; // Assuming 'id' is the unique identifier for the record
-      $isReturned = $row['returned_date'] != null; // Check if a returned date is set (assuming 'returned_date' indicates a returned item)
-
-      echo "<tr>";
-      echo "<td>" . $row['id_tool'] . "</td>";
-      echo "<td>" . $row['quan'] . "</td>";
-      echo "<td>";
-      if ($isReturned) {
-        echo "Returned";
-      } else {
-        echo '<button id="returnButton_' . $itemId . '" data-item-id="' . $itemId . '">Return</button>';
-      }
-      echo "</td>";
-      echo "</tr>";
-    }
-
-    echo "</table>";
-    echo '</div>';
-  } else {
-    echo "Error retrieving data";
-  }
-}
-
-
-
-
   ?>
-
-    <!-- Display success message if exists -->
-    <?php if (!empty($success_message)): ?>
-    <div class="success">
-      <?php echo $success_message; ?>
-    </div>
-  <?php endif; ?>
-
-  <script>
-    const returnButtons = document.querySelectorAll("[id^='returnButton_']"); // Select all buttons with IDs starting with "returnButton_"
-    returnButtons.forEach(button => {
-      button.addEventListener("click", function() {
-        const itemId = this.dataset.itemId;
-        // Simulate updating the item status (replace with your logic)
-        this.textContent = "Returned";
-        this.disabled = true;
-        // Consider sending an AJAX request to update the status on the server-side
-      });
-    });
-  </script>
-
 </body>
 </html>
