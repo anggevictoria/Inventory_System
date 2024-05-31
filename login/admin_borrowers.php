@@ -4,12 +4,11 @@ include "admin_connect1.php";
 // Create table (if not exists)
 $sql = "CREATE TABLE IF NOT EXISTS list(
   student_no INT(11) NOT NULL,
+  FOREIGN KEY (student_no) REFERENCES users(user_id),
   email_id VARCHAR(255) NOT NULL,
-  program VARCHAR(255) NOT NULL,
-  tool_no INT(11) NOT NULL,
   FOREIGN KEY (email_id) REFERENCES users(email), 
-  FOREIGN KEY (tool_no) REFERENCES tools(id),  -- Ensure id in tools is also INT(11)
-  FOREIGN KEY (student_no) REFERENCES users(user_id)  -- Ensure user_id in users is also INT(11)
+  program VARCHAR(255) NOT NULL,
+  tool_no INT(11) NOT NULL
 )";
 
 if (!mysqli_query($db, $sql)) {
@@ -119,7 +118,7 @@ button {
 </head>
 
 <body>
-  <h1>Borrower's List</h1>
+  <h1>List of Borrowers</h1>
 
   <?php
   // Include connection details
@@ -190,7 +189,6 @@ button {
     <input type="email" name="email" id="email" required><br>
     <button type="submit">Add Record</button>
   </form>
-
 -->
   <?php
   // Display existing records (call the function)

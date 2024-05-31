@@ -1,6 +1,6 @@
 <?php
 include "admin_connect.php";
-include "admin_search.php";
+
 
 // Create tables (if not exist)
 /*
