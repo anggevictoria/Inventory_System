@@ -129,7 +129,7 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === "admin") {
                 <li><a href="admin_add_tool_maintenance.php">Tool Maintenance</a></li>
                 </ul>
             </li>
-          <li><a class="nav-link" href="http://localhost/Inventory_System-MAIN/index.html">Log Out</a></li>
+          <li><a class="nav-link" href="../index.html">Log Out</a></li>
         </ul>
         
         <i class="bi bi-list mobile-nav-toggle"></i>

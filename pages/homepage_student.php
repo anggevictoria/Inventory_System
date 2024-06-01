@@ -100,7 +100,7 @@ if (isset($_GET['logout'])) {
                     </ul>
                 </li>
                 <li><a class="nav-link" href="borrowedItems_list.php">Borrowed Items</a></li>
-                <li><a class="nav-link" href="http://localhost/Inventory_System-MAIN/index.html">Log Out</a></li>
+                <li><a class="nav-link" href="../index.html">Log Out</a></li>
 
             </ul>
 
